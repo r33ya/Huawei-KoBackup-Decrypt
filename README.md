@@ -1,6 +1,6 @@
 # Huawei KoBackup v4 Backup Decryptor
 
-[English](README.md) | [中文版](README_CN.md)
+English | [中文版](README_CN.md)
 
 ---
 
@@ -1179,7 +1179,7 @@ iterations and the file cipher changes to AES-256-CTR.
 
 # Credits and Background
 
-Thanks to project mauronofrio/Huawei-Backup-V4-Decrypt for the base of this project. This project is based on reverse-engineering and practical verification
+Thanks to project mauronofrio/Huawei-Backup-V4-Decrypt for the base of this project. This project is based on research and practical verification
 of Huawei KoBackup v4 backup metadata and encryption behavior.
 
 The project was made by Zhipu GLM-5.3.
