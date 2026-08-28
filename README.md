@@ -47,16 +47,11 @@ variant and uses GCM authentication when available.
 
 ## Supported Formats
 
-  ---------------------------------------------------------------------------------------
-  Format      KoBackup              Example Password KDF    File KDF        File Cipher
-                            `backupVersion`                                 
-  ----------- ----------- ----------------- --------------- --------------- -------------
-  Legacy v4   12.x                       29 PBKDF2-SHA256 × PBKDF2-SHA256 × AES-256-CTR
-                                            10000           5000            
+| Format     | KoBackup | Example Password KDF  | File KDF              | File Cipher |
+| ---------- | -------- | --------------------- | --------------------- | ----------- |
+| Legacy v4  | 12.x     | PBKDF2-SHA256 × 10000 | PBKDF2-SHA256 × 5000  | AES-256-CTR |
+| Current v4 | 14.7.x   | PBKDF2-SHA256 × 10000 | PBKDF2-SHA256 × 10000 | AES-256-GCM |
 
-  Current v4  14.7.x                     31 PBKDF2-SHA256 × PBKDF2-SHA256 × AES-256-GCM
-                                            10000           10000           
-  ---------------------------------------------------------------------------------------
 
 ### A known KoBackup 14.7 example
 
@@ -81,21 +76,14 @@ For comparison, KoBackup 12.0-era backups tested with this project use:
 
 ## Important: KoBackup 14.x Changed the File Encryption
 
-A major source of compatibility problems is that the newer KoBackup
-format changed **two parameters** compared with KoBackup 12:
+A major source of compatibility problems is that the newer KoBackup format changed **two parameters** compared with KoBackup 12:
 
-  -----------------------------------------------------------------------
-  Parameter               KoBackup 12 / older     KoBackup 14.7 /
-                          backup                  `backupVersion = 31`
-  ----------------------- ----------------------- -----------------------
-  File-key PBKDF2         PBKDF2-SHA256 ×         PBKDF2-SHA256 ×
-                          **5000**                **10000**
+| Parameter       | KoBackup 12 / older backup | KoBackup 14.7 / `backupVersion = 31`         |
+| --------------- | -------------------------- | -------------------------------------------- |
+| File-key PBKDF2 | PBKDF2-SHA256 × **5000**   | PBKDF2-SHA256 × **10000**                    |
+| File encryption | **AES-256-CTR**            | **AES-256-GCM**                              |
+| GCM tag         | N/A                        | **16 bytes appended to the end of the file** |
 
-  File encryption         **AES-256-CTR**         **AES-256-GCM**
-
-  GCM tag                 N/A                     **16 bytes appended to
-                                                  the end of the file**
-  -----------------------------------------------------------------------
 
 Therefore, simply changing the PBKDF2 iteration count while keeping
 AES-CTR is **not sufficient** for KoBackup 14.x.
@@ -1173,22 +1161,21 @@ iterations and the file cipher changes to AES-256-CTR.
 
 # Compatibility Matrix
 
-  Component                           KoBackup 12 / v29   KoBackup 14.7 / v31
-  --------------------------------- ------------------- ---------------------
-  Password KDF                            PBKDF2-SHA256         PBKDF2-SHA256
-  Password KDF iterations                         10000                 10000
-  Password KDF output                          32 bytes              32 bytes
-  `e_perbackupkey` authentication               GCM tag               GCM tag
-  File-key KDF                            PBKDF2-SHA256         PBKDF2-SHA256
-  File-key iterations                          **5000**             **10000**
-  File cipher                           **AES-256-CTR**       **AES-256-GCM**
-  File tag                                         None          **16 bytes**
-  Streaming decryption                              Yes                   Yes
-  `checkMsgV3` verification                         Yes                   Yes
-  TAR extraction                                    Yes                   Yes
-  APK copying                                       Yes                   Yes
+| Component                       | KoBackup 12 / v29 | KoBackup 14.7 / v31 |
+| ------------------------------- | ----------------- | ------------------- |
+| Password KDF                    | PBKDF2-SHA256     | PBKDF2-SHA256       |
+| Password KDF iterations         | 10000             | 10000               |
+| Password KDF output             | 32 bytes          | 32 bytes            |
+| `e_perbackupkey` authentication | GCM tag           | GCM tag             |
+| File-key KDF                    | PBKDF2-SHA256     | PBKDF2-SHA256       |
+| File-key iterations             | **5000**          | **10000**           |
+| File cipher                     | **AES-256-CTR**   | **AES-256-GCM**     |
+| File tag                        | None              | **16 bytes**        |
+| Streaming decryption            | Yes               | Yes                 |
+| `checkMsgV3` verification       | Yes               | Yes                 |
+| TAR extraction                  | Yes               | Yes                 |
+| APK copying                     | Yes               | Yes                 |
 
-------------------------------------------------------------------------
 
 # Credits and Background
 
